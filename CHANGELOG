@@ -7,3 +7,6 @@ Version:
 
 1.0pl2 (2011-05-04)
 * update to jQuery 1.6
+
+(2011-06-09)
+* Port to new repository
