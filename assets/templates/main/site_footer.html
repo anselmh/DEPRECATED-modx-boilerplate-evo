@@ -3,10 +3,10 @@
 
 <script>
 yepnope([{
-	load: '//code.jquery.com/jquery-1.6.min.js',
+	load: '//code.jquery.com/jquery-1.6.1.min.js',
 	complete: function () {
 		if (!window.jQuery) {
-			yepnope('[(base_url)]assets/templates/main/js/libs/jquery-1.6.min.js');
+			yepnope('[(base_url)]assets/templates/main/js/libs/jquery-1.6.1.min.js');
 		}
 	}
 }, {
@@ -18,6 +18,9 @@ yepnope([{
 	<script>yepnope('[(base_url)]assets/templates/main/js/libs/dd_belatedpng.js');</script>
 	<script> DD_belatedPNG.fix('img, .png_bg'); </script>
 <![endif]-->
+
+<!-- Code for Facebook XBML implementation. Cut off if not needed. Please paste your own App-ID at 'AppID' in plugins.js to get it working -->
+<div id="fb-root"></div>
 
 </body>
 </html>​
