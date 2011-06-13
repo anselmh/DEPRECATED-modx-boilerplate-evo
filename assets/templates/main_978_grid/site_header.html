@@ -1,11 +1,11 @@
 <!doctype html>
-<!--[if IEMobile]> <html class="no-js iemobile" lang="en"> <![endif]-->
-<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]--> 
+<!--[if IEMobile]> <html class="no-js iemobile" lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"> <!--<![endif]--> 
 <head>
-<!-- Initialized DOCTYPE without Facebook FBML implementation. If needed, please add following code to <html> element before closing tag: xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" -->
+<!-- Initialized DOCTYPE with Facebook FBML implementation. If not needed, please remove following code in <html> element before closing tag: xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" -->
 	<base href="[(site_url)]" />
 	<meta charset="utf-8" />
 	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame | Remove this if you use the MODX-Boilerplate .htaccess-file (NOT the MODX Revolution .htaccess) -->
@@ -19,7 +19,7 @@
 	<!-- Remove next line if you are NOT using multiple domains OR using Canonical Snippet (http://modxcms.com/extras/package/?package=705). | Google Canonical Tag SEO -->
 	<link rel="canonical" href="[(site_url)]/index.php?id=[*id*]" />
 	
-	<!-- Specify URL to favicon and Apple touch icon if not located in root directory ELSE delete this tags -->
+	<!-- Specify URL to favicon and Apple touch icon if not located in root directory ELSE delete this tags. If you want to support various icon sizes view: http://mathiasbynens.be/notes/touch-icons#sizes or use root directory. Android (as of 2.3) only supports apple-touch-icon-precomposed linked in html as below -->
 	<link rel="shortcut icon" href="[(site_url)]/yourpath/favicon.ico">
 	<link rel="apple-touch-icon" href="[(site_url)]/yourpath/apple-touch-icon.png">
 
@@ -37,6 +37,7 @@
 	<link rel="stylesheet" href="[(site_url)]assets/templates/main/css/ipad.css" media="only screen and (min-device-width : 768px) and (max-device-width : 1024px)">
 	<link rel="stylesheet" href="[(site_url)]assets/templates/main/css/iphone4.css" media="only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)">
 
+	<!-- Do not remove Modernizr until you don't want to feature detect browser and don't need respond.js -->
 	<script src="[(site_url)]assets/templates/main/js/libs/modernizr.min.js"></script>
 </head>
 <body>

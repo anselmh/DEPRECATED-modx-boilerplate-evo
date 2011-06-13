@@ -10,3 +10,7 @@ Version:
 
 (2011-06-09)
 * Port to new repository
+
+(2011-06-13)
+* fixes #1 (update to latest commits from Revo)
+* push to v1.6
