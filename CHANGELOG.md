@@ -21,3 +21,6 @@ Version:
 (2011-06-21)
 * updated webfontloadenhancer to v1.1 #58
 * change from reset.css to normalize.css #50
+
+(2011-08-10)
+* updated from revo-master repo

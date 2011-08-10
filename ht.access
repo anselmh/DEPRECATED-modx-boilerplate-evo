@@ -7,7 +7,7 @@
 # Techniques in here adapted from all over, including:
 #   Kroc Camen: camendesign.com/.htaccess
 #   perishablepress.com/press/2006/01/10/stupid-htaccess-tricks/
-#   Sample .htaccess file of CMS MODx: modxcms.com
+#   Sample .htaccess file of CMS MODX: modx.com
 
 ###
 ### If you run a webserver other than apache, consider:
@@ -24,9 +24,11 @@
 # You may choose to make your URLs non-case-sensitive by adding a NC directive
 # to your rule: RewriteRule ^(.*)$ index.php?q=$1 [L,QSA,NC]
 
-RewriteEngine On
-RewriteBase /
-
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+	RewriteBase /
+</IfModule>
 
 
 # Rewrite www.domain.com -> domain.com -- used with SEO Strict URLs plugin
@@ -107,20 +109,13 @@ RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 #  github.com/rails/rails/commit/123eb25#commitcomment-118920
 # Use ChromeFrame if it's installed for a better experience for the poor IE folk
 
-<IfModule mod_setenvif.c>
-  <IfModule mod_headers.c>
-    BrowserMatch MSIE ie
-    Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
-  </IfModule>
-</IfModule>
-
 <IfModule mod_headers.c>
-# Because X-UA-Compatible isn't sent to non-IE (to save header bytes),
-#   We need to inform proxies that content changes based on UA
-  Header append Vary User-Agent
-# Cache control is set only if mod_headers is enabled, so that's unncessary to declare
+	Header set X-UA-Compatible "IE=Edge,chrome=1"
+    # mod_headers can't match by content-type, but we don't want to send this header on *everything*...
+    <FilesMatch "\.(js|css|gif|png|jpe?g|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|svgz|eot|ttf|otf|woff|ico|webp|appcache|manifest|htc|crx|xpi|safariextz|vcf)$" >
+      Header unset X-UA-Compatible
+    </FilesMatch>
 </IfModule>
-
 
 # ----------------------------------------------------------------------
 # Cross-domain AJAX requests
@@ -156,6 +151,11 @@ RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 # Proper MIME type for all files
 # ----------------------------------------------------------------------
 
+# JavaScript
+# Normalize to standard type (it's sniffed in IE anyways) 
+# tools.ietf.org/html/rfc4329#section-7.2
+AddType application/javascript         js
+
 # audio
 AddType audio/ogg                      oga ogg
 
@@ -171,7 +171,7 @@ AddEncoding gzip                       svgz
                                        
 # webfonts                             
 AddType application/vnd.ms-fontobject  eot
-AddType font/truetype                  ttf
+AddType application/x-font-ttf         ttf ttc
 AddType font/opentype                  otf
 AddType font/opentype                  woff
         # ^ hack to avoid chrome console warning: crbug.com/70283
@@ -201,11 +201,16 @@ AddType application/octet-stream       safariextz
 #   or concatenate and minify them manually.
 # Disabled by default.
 
-# <FilesMatch "\.combined\.(js|css)$">
-#         Options +Includes
-#         SetOutputFilter INCLUDES
-# </FilesMatch>
-
+#<FilesMatch "\.combined\.js$">
+#  Options +Includes
+#  AddOutputFilterByType INCLUDES application/javascript application/json
+#  SetOutputFilter INCLUDES
+#</FilesMatch>s
+#<FilesMatch "\.combined\.css$">
+#  Options +Includes
+#  AddOutputFilterByType INCLUDES text/css
+#  SetOutputFilter INCLUDES
+#</FilesMatch>
 
 
 # ----------------------------------------------------------------------
@@ -225,23 +230,34 @@ AddType application/octet-stream       safariextz
 # html, txt, css, js, json, xml, htc:
 <IfModule filter_module>
   FilterDeclare   COMPRESS
-  FilterProvider  COMPRESS  DEFLATE resp=Content-Type /text/(html|css|javascript|plain|x(ml|-component))/
-  FilterProvider  COMPRESS  DEFLATE resp=Content-Type /application/(javascript|json|xml|x-javascript)/
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/html
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/css
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/plain
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/x-component
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/javascript
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/json
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xhtml+xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/rss+xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/atom+xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/vnd.ms-fontobject
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/svg+xml
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/x-font-ttf
+  FilterProvider  COMPRESS  DEFLATE resp=Content-Type $font/opentype
   FilterChain     COMPRESS
-  FilterProtocol  COMPRESS  change=yes;byteranges=no
+  FilterProtocol  COMPRESS  DEFLATE change=yes;byteranges=no
 </IfModule>
 
 <IfModule !mod_filter.c>
   # Legacy versions of Apache
   AddOutputFilterByType DEFLATE text/html text/plain text/css application/json
-  AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript 
+  AddOutputFilterByType DEFLATE application/javascript 
   AddOutputFilterByType DEFLATE text/xml application/xml text/x-component
+  AddOutputFilterByType DEFLATE application/xhtml+xml application/rss+xml application/atom+xml
+  AddOutputFilterByType DEFLATE image/svg+xml application/vnd.ms-fontobject application/x-font-ttf font/opentype
 </IfModule>
 
-# webfonts and svg:
-  <FilesMatch "\.(ttf|otf|eot|svg)$" >
-    SetOutputFilter DEFLATE
-  </FilesMatch>
 </IfModule>
 
 
@@ -250,14 +266,14 @@ AddType application/octet-stream       safariextz
 # Expires headers (for better cache control)
 # ----------------------------------------------------------------------
 
-# these are pretty far-future expires headers
-# they assume you control versioning with cachebusting query params like
+# These are pretty far-future expires headers.
+# They assume you control versioning with cachebusting query params like
 #   <script src="application.js?20100608">
-# additionally, consider that outdated proxies may miscache 
+# Additionally, consider that outdated proxies may miscache 
 #   www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
 
-# if you don't use filenames to version, lower the css and js to something like
-#   "access plus 1 week" or so
+# If you don't use filenames to version, lower the CSS  and JS to something like
+#   "access plus 1 week" or so.
 
 <IfModule mod_expires.c>
   ExpiresActive on
@@ -265,24 +281,24 @@ AddType application/octet-stream       safariextz
 # Perhaps better to whitelist expires rules? Perhaps.
   ExpiresDefault                          "access plus 1 month"
 
-# cache.appcache needs re-requests in FF 3.6 (thx Remy ~Introducing HTML5)
+# cache.appcache needs re-requests in FF 3.6 (thanks Remy ~Introducing HTML5)
   ExpiresByType text/cache-manifest       "access plus 0 seconds"
 
-# your document html 
+# Your document html 
   ExpiresByType text/html                 "access plus 0 seconds"
   
-# data
+# Data
   ExpiresByType text/xml                  "access plus 0 seconds"
   ExpiresByType application/xml           "access plus 0 seconds"
   ExpiresByType application/json          "access plus 0 seconds"
 
-# rss feed
+# RSS feed
   ExpiresByType application/rss+xml       "access plus 1 hour"
 
-# favicon (cannot be renamed)
+# Favicon (cannot be renamed)
   ExpiresByType image/x-icon              "access plus 1 week" 
 
-# media: images, video, audio
+# Media: images, video, audio
   ExpiresByType image/gif                 "access plus 1 month"
   ExpiresByType image/png                 "access plus 1 month"
   ExpiresByType image/jpg                 "access plus 1 month"
@@ -292,20 +308,24 @@ AddType application/octet-stream       safariextz
   ExpiresByType video/mp4                 "access plus 1 month"
   ExpiresByType video/webm                "access plus 1 month"
   
-# webfonts
+# HTC files  (css3pie)
+  ExpiresByType text/x-component          "access plus 1 month"
+  
+# Webfonts
   ExpiresByType font/truetype             "access plus 1 month"
   ExpiresByType font/opentype             "access plus 1 month"
-  ExpiresByType font/woff                 "access plus 1 month"
+  ExpiresByType application/x-font-woff   "access plus 1 month"
   ExpiresByType image/svg+xml             "access plus 1 month"
   ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
     
-# css and javascript
-  ExpiresByType text/css                  "access plus 2 months"
-  ExpiresByType application/javascript    "access plus 2 months"
-  ExpiresByType text/javascript           "access plus 2 months"
+# CSS and JavaScript
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  
   <IfModule mod_headers.c>
     Header append Cache-Control "public"
   </IfModule>
+  
 </IfModule>
 
 
