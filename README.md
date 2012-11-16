@@ -1,6 +1,7 @@
 # This repo is not updated anymore #
 
 ** Feel free to take the code and go your own way. See license update :-) **
+If you want the ownership of this repo, please contact me. I can transfer to your GitHub account.
 
 "MODX Boilerplate" is a HTML5/CSS3/jQuery based frontend template for further usage.
 
@@ -63,7 +64,7 @@ You can override all files (no guarantee, please check if you've change one of t
 - all CSS-files
 - js/scripts.js and js/plugins.js (if you use custom plugins in here)
 Please check all these files for changes and consider to not overwrite your own settings / changes / code!!!
-Be sure to check all important files before replacing them! I do not (and cannot) give warranty for thatÉ
+Be sure to check all important files before replacing them! I do not (and cannot) give warranty for thatï¿½
 
 
 IMPORTANT NOTICES FOR DEVELOPMENT:
