@@ -13,7 +13,7 @@ It is not a direct clone of the original HTML5Boilerplate by Paul Irish. I've st
 CONTENT:
 
 - HTML5 Boilerplate HTML Body
-- jQuery 1.6.2
+- jQuery 2.0.2
 - basic CSS with normmalize.css
 - .htaccess File (MODX + Boilerplate)
 - favicon + apple touch icons

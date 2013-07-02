@@ -10,13 +10,13 @@
 
 /* THANKS */
   Creator: Anselm Hannemann
-  Company: Novolo Designagentur
-  Site: http://anselm.novolo.de/
-  Site: http://www.novolo.de/
-  Twitter: @anselmhannemann / @novolodesign
+  Company: Anselm Hannemann WebDevelopment
+  Site: http://helloanselm.com/
+  Twitter: @helloanselm
+  ADN: @anselm
   Location: Munich, Germany
 
 /* SITE */
   Standards: HTML5, CSS3
-  Components: Modernizr, jQuery, yepnope.js
+  Components: Modernizr, jQuery
   Software: MODX Revolution, HTML5Boilerplate
